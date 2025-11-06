@@ -1,0 +1,804 @@
+{
+	"info": {
+		"_postman_id": "docflow-api-collection",
+		"name": "Docflow API",
+		"description": "Complete API collection for Docflow document management system",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{jwt_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login - Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"jwt_token\", jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@docflow.com\",\n  \"password\": \"Password@123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "Login - Finance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"jwt_token\", jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"finance1@docflow.com\",\n  \"password\": \"Password@123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "Login - Manager",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"jwt_token\", jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"manager1@docflow.com\",\n  \"password\": \"Password@123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "Login - Employee",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"jwt_token\", jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"employee1@docflow.com\",\n  \"password\": \"Password@123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"New User\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"SecurePass@123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/signup",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "signup"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Invoices IN (Payable)",
+			"item": [
+				{
+					"name": "Create Invoice IN",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vendorId\": 1,\n  \"invoiceNo\": \"INV-ACME-2024-NEW\",\n  \"invoiceDate\": \"2024-11-15\",\n  \"dueDate\": \"2024-12-15\",\n  \"currency\": \"USD\",\n  \"subtotal\": 2000.00,\n  \"tax\": 200.00,\n  \"total\": 2200.00\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/invoices/in",
+							"host": ["{{base_url}}"],
+							"path": ["api", "invoices", "in"]
+						}
+					}
+				},
+				{
+					"name": "Get Invoice IN by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/invoices/in/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "invoices", "in", "1"]
+						}
+					}
+				},
+				{
+					"name": "List Invoices IN",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/invoices/in?status=PENDING&page=0&size=20&sortBy=createdAt&sortDir=DESC",
+							"host": ["{{base_url}}"],
+							"path": ["api", "invoices", "in"],
+							"query": [
+								{"key": "status", "value": "PENDING"},
+								{"key": "page", "value": "0"},
+								{"key": "size", "value": "20"},
+								{"key": "sortBy", "value": "createdAt"},
+								{"key": "sortDir", "value": "DESC"}
+							]
+						}
+					}
+				},
+				{
+					"name": "Filter Invoices IN (Advanced)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"PENDING\",\n  \"vendorId\": 1,\n  \"dateFrom\": \"2024-11-01\",\n  \"dateTo\": \"2024-11-30\",\n  \"amountMin\": 100.00,\n  \"amountMax\": 10000.00,\n  \"currency\": \"USD\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/invoices/in/filter?page=0&size=20&sortBy=total&sortDir=DESC",
+							"host": ["{{base_url}}"],
+							"path": ["api", "invoices", "in", "filter"],
+							"query": [
+								{"key": "page", "value": "0"},
+								{"key": "size", "value": "20"},
+								{"key": "sortBy", "value": "total"},
+								{"key": "sortDir", "value": "DESC"}
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Invoice IN (DRAFT only)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vendorId\": 1,\n  \"invoiceNo\": \"INV-ACME-2024-UPDATED\",\n  \"invoiceDate\": \"2024-11-15\",\n  \"dueDate\": \"2024-12-15\",\n  \"currency\": \"USD\",\n  \"subtotal\": 2500.00,\n  \"tax\": 250.00,\n  \"total\": 2750.00\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/invoices/in/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "invoices", "in", "1"]
+						}
+					}
+				},
+				{
+					"name": "Submit Invoice IN",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"note\": \"Invoice received and verified\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/invoices/in/1/submit",
+							"host": ["{{base_url}}"],
+							"path": ["api", "invoices", "in", "1", "submit"]
+						}
+					}
+				},
+				{
+					"name": "Approve Invoice IN",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"note\": \"Approved - matches delivery receipt\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/invoices/in/1/approve",
+							"host": ["{{base_url}}"],
+							"path": ["api", "invoices", "in", "1", "approve"]
+						}
+					}
+				},
+				{
+					"name": "Reject Invoice IN",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"note\": \"Rejected - pricing discrepancy\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/invoices/in/1/reject",
+							"host": ["{{base_url}}"],
+							"path": ["api", "invoices", "in", "1", "reject"]
+						}
+					}
+				},
+				{
+					"name": "Pay Invoice IN",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"method\": \"BANK\",\n  \"amount\": 2200.00,\n  \"paidAt\": \"2024-11-20T14:30:00\",\n  \"reference\": \"TXN-BANK-20241120-001\",\n  \"note\": \"Payment processed via wire transfer\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/invoices/in/1/pay",
+							"host": ["{{base_url}}"],
+							"path": ["api", "invoices", "in", "1", "pay"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Invoices OUT (Receivable)",
+			"item": [
+				{
+					"name": "Create Invoice OUT",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"clientId\": 1,\n  \"invoiceNo\": \"OUT-2024-NEW\",\n  \"invoiceDate\": \"2024-11-15\",\n  \"dueDate\": \"2024-12-15\",\n  \"currency\": \"USD\",\n  \"subtotal\": 10000.00,\n  \"tax\": 1000.00,\n  \"total\": 11000.00\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/invoices/out",
+							"host": ["{{base_url}}"],
+							"path": ["api", "invoices", "out"]
+						}
+					}
+				},
+				{
+					"name": "Get Invoice OUT by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/invoices/out/2",
+							"host": ["{{base_url}}"],
+							"path": ["api", "invoices", "out", "2"]
+						}
+					}
+				},
+				{
+					"name": "List Invoices OUT",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/invoices/out?status=PENDING&page=0&size=20",
+							"host": ["{{base_url}}"],
+							"path": ["api", "invoices", "out"],
+							"query": [
+								{"key": "status", "value": "PENDING"},
+								{"key": "page", "value": "0"},
+								{"key": "size", "value": "20"}
+							]
+						}
+					}
+				},
+				{
+					"name": "Submit Invoice OUT",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"note\": \"Invoice for consulting services - November 2024\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/invoices/out/2/submit",
+							"host": ["{{base_url}}"],
+							"path": ["api", "invoices", "out", "2", "submit"]
+						}
+					}
+				},
+				{
+					"name": "Approve Invoice OUT",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"note\": \"Approved - ready to send to client\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/invoices/out/2/approve",
+							"host": ["{{base_url}}"],
+							"path": ["api", "invoices", "out", "2", "approve"]
+						}
+					}
+				},
+				{
+					"name": "Record Payment (Inbound)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"method\": \"BANK\",\n  \"amount\": 11000.00,\n  \"paidAt\": \"2024-12-10T10:15:00\",\n  \"reference\": \"CLIENT-PAY-20241210-001\",\n  \"note\": \"Payment received from TechCorp Industries\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/invoices/out/2/pay",
+							"host": ["{{base_url}}"],
+							"path": ["api", "invoices", "out", "2", "pay"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Expense Claims",
+			"item": [
+				{
+					"name": "Create Expense Claim",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"claimDate\": \"2024-11-15\",\n  \"currency\": \"USD\",\n  \"items\": [\n    {\n      \"description\": \"Client dinner - Project kickoff meeting\",\n      \"date\": \"2024-11-14\",\n      \"category\": \"Meals & Entertainment\",\n      \"amount\": 180.00\n    },\n    {\n      \"description\": \"Taxi to client office\",\n      \"date\": \"2024-11-14\",\n      \"category\": \"Transportation\",\n      \"amount\": 35.00\n    },\n    {\n      \"description\": \"Parking fees\",\n      \"date\": \"2024-11-14\",\n      \"category\": \"Transportation\",\n      \"amount\": 15.00\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/claims",
+							"host": ["{{base_url}}"],
+							"path": ["api", "claims"]
+						}
+					}
+				},
+				{
+					"name": "Get Expense Claim by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/claims/3",
+							"host": ["{{base_url}}"],
+							"path": ["api", "claims", "3"]
+						}
+					}
+				},
+				{
+					"name": "List Expense Claims",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/claims?status=PENDING&page=0&size=20",
+							"host": ["{{base_url}}"],
+							"path": ["api", "claims"],
+							"query": [
+								{"key": "status", "value": "PENDING"},
+								{"key": "page", "value": "0"},
+								{"key": "size", "value": "20"}
+							]
+						}
+					}
+				},
+				{
+					"name": "Submit Expense Claim",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"note\": \"Expenses for client meeting on Nov 14\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/claims/3/submit",
+							"host": ["{{base_url}}"],
+							"path": ["api", "claims", "3", "submit"]
+						}
+					}
+				},
+				{
+					"name": "Approve Expense Claim (Manager)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"note\": \"Approved - valid business expenses\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/claims/3/approve",
+							"host": ["{{base_url}}"],
+							"path": ["api", "claims", "3", "approve"]
+						}
+					}
+				},
+				{
+					"name": "Reject Expense Claim",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"note\": \"Rejected - missing receipts\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/claims/3/reject",
+							"host": ["{{base_url}}"],
+							"path": ["api", "claims", "3", "reject"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Reimbursements",
+			"item": [
+				{
+					"name": "Create Reimbursement",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"expenseClaimId\": 3,\n  \"requestedDate\": \"2024-11-16\",\n  \"currency\": \"USD\",\n  \"total\": 350.00\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/reimbursements",
+							"host": ["{{base_url}}"],
+							"path": ["api", "reimbursements"]
+						}
+					}
+				},
+				{
+					"name": "Get Reimbursement by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/reimbursements/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "reimbursements", "1"]
+						}
+					}
+				},
+				{
+					"name": "List Reimbursements",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/reimbursements?status=PENDING&page=0&size=20",
+							"host": ["{{base_url}}"],
+							"path": ["api", "reimbursements"],
+							"query": [
+								{"key": "status", "value": "PENDING"},
+								{"key": "page", "value": "0"},
+								{"key": "size", "value": "20"}
+							]
+						}
+					}
+				},
+				{
+					"name": "Approve Reimbursement",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"note\": \"Approved for payment\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/reimbursements/1/approve",
+							"host": ["{{base_url}}"],
+							"path": ["api", "reimbursements", "1", "approve"]
+						}
+					}
+				},
+				{
+					"name": "Pay Reimbursement",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"method\": \"BANK\",\n  \"amount\": 350.00,\n  \"paidAt\": \"2024-11-18T16:00:00\",\n  \"reference\": \"REIMB-20241118-001\",\n  \"note\": \"Reimbursement paid to employee\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/reimbursements/1/pay",
+							"host": ["{{base_url}}"],
+							"path": ["api", "reimbursements", "1", "pay"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Document Files",
+			"item": [
+				{
+					"name": "Upload File",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/docs/3/files",
+							"host": ["{{base_url}}"],
+							"path": ["api", "docs", "3", "files"]
+						}
+					}
+				},
+				{
+					"name": "List Files",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/docs/3/files",
+							"host": ["{{base_url}}"],
+							"path": ["api", "docs", "3", "files"]
+						}
+					}
+				},
+				{
+					"name": "Download File",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/docs/3/files/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "docs", "3", "files", "1"]
+						}
+					}
+				},
+				{
+					"name": "Delete File",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/docs/3/files/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "docs", "3", "files", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Audit Logs",
+			"item": [
+				{
+					"name": "Get Audit Logs by Document",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/audit-logs/document/1?page=0&size=20",
+							"host": ["{{base_url}}"],
+							"path": ["api", "audit-logs", "document", "1"],
+							"query": [
+								{"key": "page", "value": "0"},
+								{"key": "size", "value": "20"}
+							]
+						}
+					}
+				}
+			]
+		}
+	]
+}
