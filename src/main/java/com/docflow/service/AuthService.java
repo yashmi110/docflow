@@ -91,25 +91,32 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public AuthResponse login(LoginRequest request) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String token = jwtService.generateToken(userDetails);
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String token = jwtService.generateToken(userDetails);
 
-        User user = userRepository.findByEmailWithRoles(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+            User user = userRepository.findByEmailWithRoles(request.getEmail())
+                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        return AuthResponse.builder()
-                .token(token)
-                .type("Bearer")
-                .email(user.getEmail())
-                .name(user.getName())
-                .roles(user.getRoles().stream()
-                        .map(role -> role.getName().name())
-                        .collect(Collectors.toList()))
-                .build();
+            return AuthResponse.builder()
+                    .token(token)
+                    .type("Bearer")
+                    .email(user.getEmail())
+                    .name(user.getName())
+                    .roles(user.getRoles().stream()
+                            .map(role -> role.getName().name())
+                            .collect(Collectors.toList()))
+                    .build();
+        } catch (Exception e) {
+            System.out.println("Login failed for: " + request.getEmail());
+            System.out.println("Error: " + e.getClass().getName() + " - " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @Transactional

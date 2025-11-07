@@ -6,6 +6,7 @@ import com.docflow.domain.entity.User;
 import com.docflow.domain.entity.Vendor;
 import com.docflow.domain.enums.DocumentStatus;
 import com.docflow.domain.enums.PaymentDirection;
+import com.docflow.domain.enums.RoleName;
 import com.docflow.dto.filter.InvoiceFilterCriteria;
 import com.docflow.dto.filter.PageResponse;
 import com.docflow.dto.invoice.InvoiceInRequest;
@@ -86,13 +87,15 @@ public class InvoiceInService {
         InvoiceIn invoice = invoiceInRepository.findByIdWithDetails(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Invoice", id));
 
-        // Only owner can edit DRAFT invoices
-        if (invoice.getStatus() != DocumentStatus.DRAFT) {
-            throw new IllegalStateException("Only DRAFT invoices can be edited");
-        }
-
-        if (!invoice.getOwnerUser().getId().equals(currentUser.getId())) {
-            throw new UnauthorizedActionException("Only the invoice creator can edit it");
+        // ADMIN can edit any invoice in any status, otherwise only DRAFT invoices can be edited by owner
+        boolean isAdmin = hasRole(currentUser, RoleName.ADMIN);
+        if (!isAdmin) {
+            if (invoice.getStatus() != DocumentStatus.DRAFT) {
+                throw new IllegalStateException("Only DRAFT invoices can be edited");
+            }
+            if (!invoice.getOwnerUser().getId().equals(currentUser.getId())) {
+                throw new UnauthorizedActionException("Only the invoice creator or ADMIN can edit it");
+            }
         }
 
         // Validate vendor
@@ -118,9 +121,10 @@ public class InvoiceInService {
         InvoiceIn invoice = invoiceInRepository.findByIdWithDetails(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Invoice", id));
 
-        // Only owner can submit
-        if (!invoice.getOwnerUser().getId().equals(currentUser.getId())) {
-            throw new UnauthorizedActionException("Only the invoice creator can submit it");
+        // ADMIN can submit any invoice, otherwise only owner can submit
+        boolean isAdmin = hasRole(currentUser, RoleName.ADMIN);
+        if (!isAdmin && !invoice.getOwnerUser().getId().equals(currentUser.getId())) {
+            throw new UnauthorizedActionException("Only the invoice creator or ADMIN can submit it");
         }
 
         // Transition DRAFT -> PENDING
@@ -209,5 +213,13 @@ public class InvoiceInService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         
         return PageResponse.of(responsePage, totalAmount, page.getTotalElements());
+    }
+
+    /**
+     * Check if user has a specific role.
+     */
+    private boolean hasRole(User user, RoleName roleName) {
+        return user.getRoles().stream()
+                .anyMatch(role -> role.getName() == roleName);
     }
 }

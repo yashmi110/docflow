@@ -106,6 +106,6 @@ public class LocalFileStorage implements FileStorage {
      */
     private String sanitizeFilename(String filename) {
         // Remove path separators and null bytes
-        return filename.replaceAll("[/\\\\\\0]", "_");
+        return filename.replaceAll("[/\\\\\\x00]", "_");
     }
 }

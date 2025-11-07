@@ -5,6 +5,7 @@ import com.docflow.domain.entity.ExpenseClaim;
 import com.docflow.domain.entity.ExpenseItem;
 import com.docflow.domain.entity.User;
 import com.docflow.domain.enums.DocumentStatus;
+import com.docflow.domain.enums.RoleName;
 import com.docflow.dto.claim.ExpenseClaimRequest;
 import com.docflow.dto.claim.ExpenseClaimResponse;
 import com.docflow.exception.ResourceNotFoundException;
@@ -85,9 +86,10 @@ public class ExpenseClaimService {
         ExpenseClaim claim = expenseClaimRepository.findByIdWithDetails(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Expense claim", id));
 
-        // Only owner can submit
-        if (!claim.getOwnerUser().getId().equals(currentUser.getId())) {
-            throw new UnauthorizedActionException("Only the claim creator can submit it");
+        // ADMIN can submit any claim, otherwise only owner can submit
+        boolean isAdmin = hasRole(currentUser, RoleName.ADMIN);
+        if (!isAdmin && !claim.getOwnerUser().getId().equals(currentUser.getId())) {
+            throw new UnauthorizedActionException("Only the claim creator or ADMIN can submit it");
         }
 
         // Transition DRAFT -> PENDING
@@ -141,5 +143,13 @@ public class ExpenseClaimService {
             response.setItems(expenseClaimMapper.toItemResponseList(claim.getItems()));
         }
         return response;
+    }
+
+    /**
+     * Check if user has a specific role.
+     */
+    private boolean hasRole(User user, RoleName roleName) {
+        return user.getRoles().stream()
+                .anyMatch(role -> role.getName() == roleName);
     }
 }

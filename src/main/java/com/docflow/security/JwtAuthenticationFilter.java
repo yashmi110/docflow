@@ -24,11 +24,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
 
     @Override
+    protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
+        String path = request.getRequestURI();
+        // Normalize path (remove trailing slash, handle context path)
+        if (path.endsWith("/") && path.length() > 1) {
+            path = path.substring(0, path.length() - 1);
+        }
+        // Skip JWT processing for public endpoints
+        return path.startsWith("/api/auth/") ||
+               path.startsWith("/oauth2/") ||
+               path.startsWith("/login/oauth2/") ||
+               path.startsWith("/actuator/health") ||
+               path.startsWith("/actuator/info") ||
+               path.equals("/api/auth/login") ||
+               path.equals("/api/auth/signup");
+    }
+
+    @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
+
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
