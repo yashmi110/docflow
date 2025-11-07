@@ -1,6 +1,7 @@
 package com.docflow.config;
 
 import com.docflow.exception.AuthenticationEntryPointImpl;
+import com.docflow.security.Auth0JwtDecoder;
 import com.docflow.security.JwtAuthenticationFilter;
 import com.docflow.security.OAuth2AuthenticationSuccessHandler;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +18,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,6 +39,7 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final AuthenticationEntryPointImpl authenticationEntryPoint;
+    private final Auth0JwtDecoder auth0JwtDecoder;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -57,6 +61,15 @@ public class SecurityConfig {
             .oauth2Login(oauth2 -> oauth2
                 .successHandler(oAuth2AuthenticationSuccessHandler)
             )
+            .oauth2ResourceServer(oauth2 -> oauth2
+                .jwt(jwt -> {
+                    try {
+                        jwt.decoder(auth0JwtDecoder.jwtDecoder());
+                    } catch (MalformedURLException e) {
+                        throw new RuntimeException("Invalid Auth0 domain URL", e);
+                    }
+                })
+            )
             .authenticationProvider(authenticationProvider())
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -68,7 +81,9 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
             "http://localhost:5173",
-            "http://localhost:3000"
+            "https://localhost:5173",
+            "http://localhost:3000",
+            "https://localhost:3000"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
